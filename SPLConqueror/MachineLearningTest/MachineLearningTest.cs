@@ -14,14 +14,14 @@ namespace MachineLearningTest
         private StringWriter consoleOutput = new StringWriter();
 
         private static string modelPathVS = Path.GetFullPath(
-            Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "..//..//...")) + Path.DirectorySeparatorChar
+            Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "..//..//..")) + Path.DirectorySeparatorChar
             + "ExampleFiles" + Path.DirectorySeparatorChar + "BerkeleyDBFeatureModel.xml";
 
         private static string modelPathCI = "/home/travis/build/se-passau/SPLConqueror/SPLConqueror/Example"
                   + "Files/BerkeleyDBFeatureModel.xml";
 
         private static string measurementPathVS = Path.GetFullPath(
-            Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "..//..//...")) + Path.DirectorySeparatorChar
+            Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "..//..//..")) + Path.DirectorySeparatorChar
             + "ExampleFiles" + Path.DirectorySeparatorChar + "BerkeleyDBMeasurements.xml";
 
         private static string measurementPathCI = "/home/travis/build/se-passau/SPLConqueror/SPLConqueror/Example"
