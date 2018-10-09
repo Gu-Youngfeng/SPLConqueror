@@ -36,6 +36,7 @@ namespace MachineLearning.Learning.Regression
         /// <returns>The mean error rate of all k learning rounds.</returns>
         public double learn()
         {
+            experiment = new Learning(null, null);
             int sizeOfTestSet = trainingSet.Count / settings.crossValidation_k;
 
             // Shuffle the list with random seed k
@@ -43,8 +44,6 @@ namespace MachineLearning.Learning.Regression
 
             // Split the list in multiple partitions
             List<Configuration>[] subsets = SplitList<Configuration>(trainingSet, settings.crossValidation_k);
-
-            List<LearningRound> lastModels = new List<LearningRound>();
 
             // learn models for each split 
             for (int i = 0; i < settings.crossValidation_k; i++)
@@ -59,19 +58,18 @@ namespace MachineLearning.Learning.Regression
                     }
                 }
 
-                experiment = new Learning(currTrainingSet, subsets[i]);
+                experiment.testSet = currTrainingSet;
+                experiment.validationSet = subsets[i];
                 experiment.mlSettings = settings;
                 experiment.learn();
-                lastModels.Add(experiment.models[0].LearningHistory[experiment.models[0].LearningHistory.Count - 1]);
                 
             }
 
             double error = 0;
-            for (int i = 0; i < lastModels.Count; i++)
+            for (int i = 0; i < experiment.models.Count; i++)
             {
-                error += lastModels[i].validationError_relative;
+                error += experiment.models[i].LearningHistory[experiment.models[i].LearningHistory.Count - 1].validationError_relative;
             }
-
 
             return error / settings.crossValidation_k;
         }

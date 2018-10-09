@@ -628,21 +628,27 @@ namespace CommandLine
 
                 case COMMAND_PREDICT_CONFIGURATIONS_SPLC:
                     {
-                        FeatureSubsetSelection learnedModel = exp.models[exp.models.Count - 1];
                         String samplingIdentifier = createSamplingIdentifier();
 
                         PythonPredictionWriter csvWriter = new PythonPredictionWriter(targetPath, new String[] { "SPLConqueror" }, GlobalState.varModel.Name + "_" + samplingIdentifier);
-                        List<Feature> features = learnedModel.LearningHistory[learnedModel.LearningHistory.Count - 1].FeatureSet;
                         csvWriter.writePredictions("Configuration;MeasuredValue;PredictedValue\n");
                         for (int i = 0; i < GlobalState.allMeasurements.Configurations.Count; i++)
                         {
+                            Double predictedValue = 0d;
+                            foreach (FeatureSubsetSelection currModel in exp.models)
+                            {
+                                FeatureSubsetSelection learnedModel = currModel;
+                                List<Feature> features = learnedModel.LearningHistory[learnedModel.LearningHistory.Count - 1].FeatureSet;
 
-                            Double predictedValue = FeatureSubsetSelection.estimate(features, GlobalState.allMeasurements.Configurations[i]);
+                                predictedValue += FeatureSubsetSelection.estimate(features, GlobalState.allMeasurements.Configurations[i]);
+                            }
+                            predictedValue /= exp.models.Count;
                             csvWriter.writePredictions(GlobalState.allMeasurements.Configurations[i].ToString().Replace(";", "_") + ";" + Math.Round(GlobalState.allMeasurements.Configurations[i].GetNFPValue(), 4) + ";" + Math.Round(predictedValue, 4) + "\n");
+
                         }
                         csvWriter.close();
 
-                        break;
+                        break; 
                     }
 
                 case COMMAND_ANALYZE_LEARNING:
